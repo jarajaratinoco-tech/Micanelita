@@ -10,6 +10,12 @@
             --color-sobre: #e91e63;
             --color-texto: #333;
             --color-carta: #ffffff;
+            
+            /* Colores de las nuevas cartas */
+            --rosa: #ff80ab;
+            --amarillo: #fff176;
+            --rojo: #ef5350;
+            --azul: #64b5f6;
         }
 
         body {
@@ -22,116 +28,273 @@
             min-height: 100vh;
             margin: 0;
             overflow-x: hidden;
+            color: var(--color-texto);
+        }
+
+        /* Secciones principales */
+        .seccion {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .oculto {
+            display: none !important;
         }
 
         /* Cuenta Regresiva */
         .timer-section { text-align: center; margin-bottom: 30px; }
-        #countdown { font-size: 1.5rem; color: var(--color-sobre); font-weight: bold; }
+        #countdown { font-size: 1.8rem; color: var(--color-sobre); font-weight: bold; margin-top: 10px; }
 
-        /* Sobre Animado */
-        .envelope {
-            position: relative;
-            width: 150px;
-            height: 100px;
-            background: var(--color-sobre);
-            border-radius: 0 0 5px 5px;
+        /* Sobre Animado (Inicio) */
+        .envelope-container {
+            text-align: center;
             cursor: pointer;
-            transition: 0.3s;
-            z-index: 1;
         }
-        .envelope::before {
-            content: "";
-            position: absolute;
-            top: -50px; left: 0;
-            border-left: 75px solid transparent;
-            border-right: 75px solid transparent;
-            border-bottom: 50px solid var(--color-sobre);
+        .envelope {
+            width: 160px;
+            height: 110px;
+            background: var(--color-sobre);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+            margin: 0 auto 15px auto;
         }
-        .envelope:hover { transform: translateY(-10px); }
+        .envelope-container:hover .envelope {
+            transform: scale(1.08) translateY(-5px);
+        }
 
-        /* Modal de la Carta */
+        /* Panel de las 4 Cartas */
+        .grid-cartas {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px 20px;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        /* Estructura de cada bloque (sobre + etiqueta) */
+        .carta-bloque {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .carta-bloque:hover {
+            transform: translateY(-8px);
+        }
+
+        /* Posicionamiento en la cuadrícula */
+        .pos-superior { grid-column: 2; }
+        .pos-izq { grid-column: 1; }
+        .pos-centro { grid-column: 2; }
+        .pos-der { grid-column: 3; }
+
+        /* Estilo base de los sobres de colores */
+        .mini-sobre {
+            width: 110px;
+            height: 75px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+        
+        .c-rosa { background-color: var(--rosa); }
+        .c-amarillo { background-color: var(--amarillo); }
+        .c-rojo { background-color: var(--rojo); }
+        .c-azul { background-color: var(--azul); }
+
+        .carta-bloque span {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        /* Botón Volver Atrás */
+        .btn-volver {
+            margin-top: 40px;
+            padding: 10px 25px;
+            background-color: var(--color-sobre);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+        .btn-volver:hover {
+            background-color: #c2185b;
+        }
+
+        /* Modal de lectura */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.6);
             z-index: 10;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .letter-content {
             background: var(--color-carta);
-            padding: 30px;
-            width: 80%;
-            max-width: 500px;
-            max-height: 70vh;
-            overflow-y: auto;
-            border-radius: 10px;
+            padding: 35px;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             position: relative;
+            text-align: center;
+            line-height: 1.6;
         }
         .close-btn {
-            position: sticky;
-            top: 0; float: right;
-            cursor: pointer; font-size: 20px;
+            position: absolute;
+            top: 15px; right: 20px;
+            cursor: pointer; font-size: 24px;
+            color: #888;
         }
-        .letter-item {
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
+        .close-btn:hover { color: #333; }
+
+        /* Adaptabilidad para celulares */
+        @media (max-width: 500px) {
+            .grid-cartas {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            .pos-superior, .pos-izq, .pos-centro, .pos-der {
+                grid-column: auto;
+            }
         }
-        .letter-date { font-size: 0.8rem; color: #888; }
     </style>
 </head>
 <body>
 
-    <div class="timer-section">
-        <h2>Tiempo juntos:</h2>
-        <div id="countdown">Cargando...</div>
+    <div id="seccionInicio" class="seccion">
+        <div class="timer-section">
+            <h2>Tiempo juntos:</h2>
+            <div id="countdown">Cargando...</div>
+        </div>
+
+        <div class="envelope-container" onclick="irAApartadoCartas()">
+            <div class="envelope">💗</div>
+            <p>Toca el sobre para ver tus opciones</p>
+        </div>
     </div>
 
-    <div class="envelope" onclick="verCartas()"></div>
-    <p>Toca el sobre para leer mis mensajes</p>
+    <div id="seccionCartas" class="seccion oculto">
+        <h2>Elige cómo te sientes hoy 💗</h2>
+        
+        <div class="grid-cartas">
+            <div class="carta-bloque pos-superior" onclick="abrirCarta('rosa')">
+                <div class="mini-sobre c-rosa">💗</div>
+                <span>MI PRINCESITA💗</span>
+            </div>
 
-    <!-- Ventana donde aparecen las cartas -->
+            <div class="carta-bloque pos-izq" onclick="abrirCarta('amarillo')">
+                <div class="mini-sobre c-amarillo">💗</div>
+                <span>FELICIDAD</span>
+            </div>
+
+            <div class="carta-bloque pos-centro" onclick="abrirCarta('rojo')">
+                <div class="mini-sobre c-rojo">💗</div>
+                <span>ENOJO</span>
+            </div>
+
+            <div class="carta-bloque pos-der" onclick="abrirCarta('azul')">
+                <div class="mini-sobre c-azul">💗</div>
+                <span>TRISTEZA</span>
+            </div>
+        </div>
+
+        <button class="btn-volver" onclick="irAInicio()">← Volver atrás</button>
+    </div>
+
     <div id="modalCarta" class="modal">
         <div class="letter-content">
-            <span class="close-btn" onclick="cerrar()">×</span>
-            <h3>Mis Cartas para Ti</h3>
-            
-            <div id="contenedorCartas">
-                <!-- AQUÍ AGREGARÁS LAS NUEVAS CARTAS -->
-                <div class="letter-item">
-                    <div class="letter-date">5 de Julio, 2024</div>
-                    <p>¡Hola! Esta es la primera carta de nuestro baúl digital...</p>
-                </div>
-
-                <!-- Para agregar otra, copia desde aquí -->
-                <div class="letter-item">
-                    <div class="letter-date">6 de Julio, 2024</div>
-                    <p>Hoy quise escribirte esto porque...</p>
-                </div>
-                <!-- Hasta aquí -->
-
-            </div>
+            <span class="close-btn" onclick="cerrarModal()">&times;</span>
+            <h3 id="tituloCarta" style="color: var(--color-sobre); margin-top: 0;"></h3>
+            <div id="textoCarta"></div>
         </div>
     </div>
 
     <script>
-        // Configura tu fecha especial aquí
-        const fechaInicio = new Date("Jan 01, 2024 00:00:00").getTime();
+        // 1. Configuración de la fecha especial (29 de Noviembre de 2025)
+        const fechaInicio = new Date("Nov 29, 2025 00:00:00").getTime();
 
         setInterval(() => {
             const ahora = new Date().getTime();
             const diff = ahora - fechaInicio;
-            const d = Math.floor(diff / (1000*60*60*24));
-            const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-            const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-            const s = Math.floor((diff % (1000*60)) / 1000);
+            
+            // Cálculos matemáticos de tiempo
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            
             document.getElementById("countdown").innerHTML = `${d}d ${h}h ${m}m ${s}s`;
         }, 1000);
 
-        function verCartas() { document.getElementById("modalCarta").style.display = "flex"; }
-        function cerrar() { document.getElementById("modalCarta").style.display = "none"; }
+        // 2. Navegación entre apartados
+        function irAApartadoCartas() {
+            document.getElementById("seccionInicio").classList.add("oculto");
+            document.getElementById("seccionCartas").classList.remove("oculto");
+        }
+
+        function irAInicio() {
+            document.getElementById("seccionCartas").classList.add("oculto");
+            document.getElementById("seccionInicio").classList.remove("oculto");
+        }
+
+        // 3. Textos y Lógica para abrir las cartas
+        const contenidosCartas = {
+            rosa: {
+                titulo: "Para: Mi Princesita 💗",
+                texto: "Bienvenida a nuestro rincón secreto, mi vida 💗 Este lugar es solo para ti y para mí, para que encuentres cartitas mías sin necesidad de que sea San Valentín, tu cumpleaños o cualquier otra fecha del calendario. Porque contigo, cada día es especial y merece ser celebrado. Te amo mucho, te amo más de lo que las palabras pueden expresar, y quiero que sepas que siempre estaré a tu lado, apoyándote, cuidándote y amándote sin importar qué pase. Eres mi todo 💗"
+            },
+            amarillo: {
+                titulo: "Felicidad ✨",
+                texto: "Me hace inmensamente feliz saber que estás sonriendo justo ahora. Tu alegría es lo que ilumina mis días. ¡Guarda esta hermosa energía y nunca olvides lo mucho que te amo!"
+            },
+            rojo: {
+                titulo: "Enojo 😡",
+                texto: "Sé que a veces las cosas no salen como queremos o podemos tener momentos difíciles, pero respira profundo, mi amor. Estoy aquí contigo para escucharte y abrazarte fuerte hasta que todo pase. Todo estará bien."
+            },
+            azul: {
+                titulo: "Tristeza 💧",
+                texto: "Si hoy es un día gris, recuerda que no estás sola. Estoy aquí sosteniendo tu mano. Llorar está bien, pero no olvides que después de la tormenta siempre sale el sol, y yo estaré aquí para verlo contigo."
+            }
+        };
+
+        function abrirCarta(tipo) {
+            const carta = contenidosCartas[tipo];
+            document.getElementById("tituloCarta").innerText = carta.titulo;
+            document.getElementById("textoCarta").innerHTML = `<p>${carta.texto}</p>`;
+            document.getElementById("modalCarta").style.display = "flex";
+        }
+
+        function cerrarModal() {
+            document.getElementById("modalCarta").style.display = "none";
+        }
     </script>
 </body>
 </html>
